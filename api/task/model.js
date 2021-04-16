@@ -1,16 +1,19 @@
 const db = require('../../data/dbConfig');
 
 const getTasks = () => {
-	return db('tasks as t')
-		.join('projects as p', 't.project_id', '=', 'p.project_id')
-		.select(
-			't.task_id',
-			't.task_description',
-			't.task_notes',
-			't.task_completed',
-			'p.project_name',
-			'p.project_description'
-		);
+	return (
+		db('tasks as t')
+			// Shortcut .where()   vvvvvvvvvvvvvv  vvv  vvvvvvvvvvvvvv
+			.join('projects as p', 't.project_id', '=', 'p.project_id')
+			.select(
+				't.task_id',
+				't.task_description',
+				't.task_notes',
+				't.task_completed',
+				'p.project_name',
+				'p.project_description'
+			)
+	);
 };
 
 const addTask = (task) => {

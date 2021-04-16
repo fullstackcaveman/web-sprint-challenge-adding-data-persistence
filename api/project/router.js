@@ -8,6 +8,7 @@ router.get('/', (req, res, next) => {
 		.then((project) => {
 			const projects = [];
 
+			// Mapping through the response to change boolean to true/false
 			project.map((completed) => {
 				completed.project_completed === 1
 					? projects.push({ ...completed, project_completed: true })
@@ -24,6 +25,7 @@ router.post('/', (req, res, next) => {
 
 	Project.addProject(project)
 		.then((project) => {
+			// Returning response with converted boolean
 			if (project.project_completed === 1) {
 				res.status(201).json({ ...project, project_completed: true });
 			} else {
