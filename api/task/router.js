@@ -1,1 +1,38 @@
-// build your `/api/tasks` router here
+const express = require('express');
+const Task = require('./model');
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+	Task.getTasks()
+		.then((task) => {
+			const tasks = [];
+
+			// Mapping through the response to change boolean to true/false
+			task.map((completed) => {
+				completed.task_completed === 1
+					? tasks.push({ ...completed, task_completed: true })
+					: tasks.push({ ...completed, task_completed: false });
+			});
+
+			res.json(tasks);
+		})
+		.catch(next);
+});
+
+router.post('/', (req, res, next) => {
+	const task = req.body;
+
+	Task.addTask(task)
+		.then((task) => {
+			// Returning response with converted boolean
+			if (task.task_completed === 1) {
+				res.status(201).json({ ...task, task_completed: true });
+			} else {
+				res.status(201).json({ ...task, task_completed: false });
+			}
+		})
+		.catch(next);
+});
+
+module.exports = router;
